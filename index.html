@@ -1,0 +1,54 @@
+<html>
+  <body>
+    Author:
+    <input type="text" id="author" />
+    <input type="submit" id="submit-btn" value="Search">
+    <hr>
+    <h2>Create New Blog Post</h2>
+    Author:
+    <input type="text" id="new-author" />
+    Title:
+    <input type="text" id="new-title" />
+    Body:
+    <textarea id="new-body">
+      sample text
+    </textarea>
+    <input type="submit" id="new-submit-button" />
+    <section class="posts">
+      <!-- add posts here based on search results -->
+    </section>
+    <script   src="https://code.jquery.com/jquery-2.2.4.min.js"   integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44="   crossorigin="anonymous"></script>
+    <script>
+      // var author = 'Amy Hua';
+      var section = document.getElementsByClassName('posts')[0];
+      $('#submit-btn').on('click', function() {
+        // empty past results
+        $('.posts').empty();
+        var author = $('#author').val();
+        // do a search that gets all posts by the author
+        var getUrl = encodeURI('http://localhost:3000/posts?author='
+                             + author);
+        $.get(getUrl, function success(posts) {
+          console.log('posts', posts);
+          posts.forEach(function(post) {
+            var article = document.createElement('article');
+            article.innerText = 'Author: ' + post.author + '. Title: ' + post.title;
+            section.appendChild(article);
+          });
+        });
+      })
+      /*
+        Exercise:
+        Have a working search bar that, given an Author, returns
+        a list of search results: blog posts including author + title,
+        of all posts that have the given author.
+        When I search "Carl", results returns all posts by Carl.
+        When I then search "Bob", results no longer show
+          posts by Carl, and show all posts by Bob instead.
+        BONUS:
+        Have the search results return all the COMMENTS for posts
+          by the given author.
+      */
+    </script>
+  </body>
+</html>
