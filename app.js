@@ -1,11 +1,14 @@
-// include express package
+// include packages
 var express = require('express');
-
-// include file system package
 var fs = require('fs');
 
 // create an http server
 var app = express();
+
+var getPosts = function(id) {
+  var data = JSON.parse(fs.readFileSync('db.json').toString());
+  return data.posts;
+};
 
 // handle incoming requests to the "/" endpoint
 app.get('/', function (request, response) {
