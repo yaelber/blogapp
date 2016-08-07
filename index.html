@@ -1,6 +1,5 @@
 <html>
   <body>
-    <%= hello %>
     Author:
     <input type="text" id="author" />
     <input type="submit" id="submit-btn" value="Search">
@@ -15,9 +14,12 @@
       sample text
     </textarea>
     <input type="submit" id="new-submit-button" />
+    <hr>
+    <h2>Posts</h2>
     <section class="posts">
-      <!-- add posts here based on search results -->
+      <% _.forEach(posts, function(post) { %><a href="/posts/<%- post.id %>"><%- post.title %></a><br><% }); %>
     </section>
+    <hr>
     <script   src="https://code.jquery.com/jquery-2.2.4.min.js"   integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44="   crossorigin="anonymous"></script>
     <script>
       // var author = 'Amy Hua';

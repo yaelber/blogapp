@@ -28,10 +28,20 @@ var getPosts = function(id) {
 // handle incoming requests to the "/" endpoint
 app.get('/', function (request, response) {
   fs.readFile('index.html', function(error, html) {
-    var compiled = _.template(html);
+    var template = _.template(html);
     var posts = getPosts();
-    response.send(posts);
+    var generated = template({ posts: posts });
+    response.send(generated);
   });
+});
+
+// define the /posts/:id page
+app.get('/posts/:id', function(request, response) {
+  var html = fs.readFileSync('post.html').toString();
+  var template = _.template(html);
+  var post = getPosts(parseInt(request.params.id));
+  var generated = template({ post: post });
+  response.send(generated);
 });
 
 // handle blog post creation
