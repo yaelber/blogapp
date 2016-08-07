@@ -6,6 +6,15 @@ var _ = require('lodash');
 // create an http server
 var app = express();
 
+// checking for authentication
+app.use(function(req, res, next) {
+  if (req.query.password !== 'secret') {
+    res.send('cannot continue wrong password');
+  } else {
+    next();
+  }
+});
+
 var getPosts = function(id) {
   var data = JSON.parse(fs.readFileSync('db.json').toString());
   if (id === undefined) {
@@ -47,6 +56,10 @@ app.get('/posts/:id', function(request, response) {
 // handle blog post creation
 app.post('/posts', function(request, response) {
   response.send('post created!');
+});
+
+app.use(function(req, res, next) {
+  res.status(404).send('page not found')
 });
 
 // listen for incoming requests
