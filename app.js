@@ -3,17 +3,22 @@ var express = require('express');
 var fs = require('fs');
 var _ = require('lodash');
 
+
 // create an http server
 var app = express();
 
+app.set('views', './views'); // specify the views directory
+app.set('view engine', 'ejs');
+
+
 // checking for authentication
-app.use(function(req, res, next) {
-  if (req.query.password !== 'secret') {
-    res.send('cannot continue wrong password');
-  } else {
-    next();
-  }
-});
+// app.use(function(req, res, next) {
+//   if (req.query.password !== 'secret') {
+//     res.send('cannot continue wrong password');
+//   } else {
+//     next();
+//   }
+// });
 
 var getPosts = function(id) {
   var data = JSON.parse(fs.readFileSync('db.json').toString());
@@ -36,12 +41,13 @@ var getPosts = function(id) {
 
 // handle incoming requests to the "/" endpoint
 app.get('/', function (request, response) {
-  fs.readFile('index.html', function(error, html) {
-    var template = _.template(html);
-    var posts = getPosts();
-    var generated = template({ posts: posts });
-    response.send(generated);
-  });
+  response.render('index')
+  // fs.readFile('index.html', function(error, html) {
+  //   var template = _.template(html);
+  //   var posts = getPosts();
+  //   var generated = template({ posts: posts });
+  //   response.send(generated);
+  // });
 });
 
 // define the /posts/:id page
