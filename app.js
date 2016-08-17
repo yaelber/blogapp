@@ -2,7 +2,7 @@
 var express = require('express');
 var fs = require('fs');
 var _ = require('lodash');
-
+var pg = require('pg');
 
 // create an http server
 var app = express();
@@ -12,15 +12,13 @@ app.set('view engine', 'ejs');
 
 
 
-var pg = require('pg');
-
 // create a config to configure both pooling behavior
 // and client options
 // note: all config is optional and the environment variables
 // will be read if the config is not present
 var config = {
-  user: 'postgres', //env var: PGUSER
-  database: 'postgres', //env var: PGDATABASE
+  user: 'yaelbercow', //env var: PGUSER
+  database: 'yaelbercow', //env var: PGDATABASE
   // password: 'secret', //env var: PGPASSWORD
   port: 5432, //env var: PGPORT
   max: 10, // max number of clients in the pool
@@ -64,7 +62,7 @@ pool.on('error', function (err, client) {
 
 
 
-// checking for authentication
+// // checking for authentication
 // app.use(function(req, res, next) {
 //   if (req.query.password !== 'secret') {
 //     res.send('cannot continue wrong password');
@@ -94,13 +92,23 @@ var getPosts = function(id) {
 
 // handle incoming requests to the "/" endpoint
 app.get('/', function (request, response) {
-  response.render('index')
-  // fs.readFile('index.html', function(error, html) {
-  //   var template = _.template(html);
-  //   var posts = getPosts();
-  //   var generated = template({ posts: posts });
-  //   response.send(generated);
-  // });
+
+  pool.connect(function(err, client, done) {
+    if(err) {
+      return console.error('error fetching client from pool', err);
+    }
+    client.query('select * from posts', function(err, result) {
+      //call `done()` to release the client back to the pool
+      // done();
+
+      console.log(result);
+
+      if(err) {
+        return console.error('error running query', err);
+      }
+        response.render('index', result);      //output: 1
+    });
+  });
 });
 
 // define the /posts/:id page
