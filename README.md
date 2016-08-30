@@ -8,3 +8,4 @@
 1. Node.js >= v6
 2. Express.js
 3. Lodash
+# blog_app_new
